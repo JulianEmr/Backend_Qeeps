@@ -1,10 +1,14 @@
-const express = require('express');
+import "./loadEnvironment.js";
+import express from "express";
+import mongodb from "mongodb";
+import qeeps from "./routes.js";
+
 
 const app = express();
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json())
+
+app.use("/qeeps", qeeps);
 
 app.get('/', (req, res, next) => {
 	res.send("Hello");
