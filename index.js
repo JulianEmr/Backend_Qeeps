@@ -1,12 +1,16 @@
 import "./loadEnvironment.js";
 import express from "express";
 import mongodb from "mongodb";
+import bodyParser from "body-parser";
 import qeeps from "./routes.js";
 
 
 const app = express();
 
-app.use(express.json())
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json())
 
 app.use("/qeeps", qeeps);
 
