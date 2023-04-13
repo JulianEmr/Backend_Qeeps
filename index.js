@@ -1,9 +1,9 @@
-import "./loadEnvironment.js";
-import express from "express";
-import mongodb from "mongodb";
-import bodyParser from "body-parser";
-import qeeps from "./routes.js";
+const dotenv = require("dotenv");
+const express = require("express");
+const bodyParser = require("body-parser");
+const qeeps = require("./routes.js");
 
+dotenv.config();
 
 const app = express();
 

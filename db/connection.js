@@ -1,22 +1,11 @@
-import { MongoClient } from "mongodb";
-import GridFsStorage from 'multer-gridfs-storage';
-import Grid from 'gridfs-stream';
-
+require('dotenv').config();
+const mongoose = require("mongoose");
 const connectionString = process.env.MONGO_URL || "";
+const Grid = require('gridfs-stream');
+mongoose.connect(connectionString);
 
-const client = new MongoClient(connectionString);
-
-let conn;
-try {
-    conn = await client.connect();
-    conn.once('open', () => {
-        gfs = Grid(conn.db);
-        gfs.collection('uploads');
-  });
-} catch(e) {
-    console.error(e);
-}
-
-let db = conn.db("qeeps_test");
-
-export default db;
+const db = mongoose.connection.useDb("qeeps_test");
+db.once('open', () => {
+    const gfs = Grid(db.db, mongoose.mongo);
+    module.exports = gfs;
+});
