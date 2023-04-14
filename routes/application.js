@@ -112,6 +112,4 @@ router.get("/application", async (req, res) => {
         }
     })
 });
-
-
 module.exports = router;
