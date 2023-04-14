@@ -4,7 +4,7 @@
   "description": "Create back-end application with Nodejs, Express and MongoDb . The purpose of this test is to assess the candidate's ability to work independently and allow for creativity.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node index.js"
   },
   "repository": {
