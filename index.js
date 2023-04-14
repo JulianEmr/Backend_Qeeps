@@ -18,4 +18,6 @@ app.use(bodyParser.json())
 app.use(agency, user, asset, application);
 
 // Create a Server on port 3000
-const server = app.listen(3000, function () {})
+app.listen(3000, function () {})
+
+module.exports = app; // for testing purposes

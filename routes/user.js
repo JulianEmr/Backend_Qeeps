@@ -14,7 +14,7 @@ router.post("/register", async (req, res) => {
         await userModel.findOne({ email: req.body.email })
             .then((doc) => {
                 if (doc) {
-                    res.status(400).send("Email is already used");
+                    res.status(400).json({message: "Email is already used"});
                     returnvalue = 1;
                 }
             })
@@ -31,11 +31,11 @@ router.post("/register", async (req, res) => {
                 user_type: req.body.user_type,
             });
             newUser.save();
-            res.send("Your account is created ! You need to login to have your token").status(200);
+            res.status(200).json({message: "Your account is created ! You need to login to have your token"});
         });
     }
     else {
-        res.status(400).send("Invalid user type, please select 'candidate' or 'agent'");
+        res.status(400).json({message: "Invalid user type, please select 'candidate' or 'agent'"});
     }
 });
 
@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
                     }
                 });
             } else {
-                res.status(400).send("Email is not found");
+                res.status(400).json({message: "Email is not found"});
                 returnvalue = 1;
             }
         })

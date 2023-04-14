@@ -7,12 +7,12 @@ const router = express();
 
 router.post("/application", async (req, res) => {
     if (!req.body.token) {
-        res.send("Token is needed, try to login again").status(400);
+        res.status(400).json({message : "Token is needed, try to login again"});
         return;
     }
     const auth = check_token(req.body.token)
     if (auth === false) {
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message : "Your token is invalid"});
         return;
     }
     gfs.bucketName = "user";
@@ -22,11 +22,11 @@ router.post("/application", async (req, res) => {
     const userModel = mongoose.model('userSchema', userSchema);
     await userModel.findById(auth).then(async (doc) => {
         if (!doc || doc.user_type != "agent")
-            res.send("You don't have permission to access this").status(400)
+            res.status(400).json({message : "You don't have permission to access this"})
     })
     await userModel.findOne({ email: req.body.user }).then((doc) => {
         if (!doc) {
-            res.send("Invalid user email").status(400);
+            res.status(400).json({message : "Invalid user email"});
             return_value = 1;
         }
         else
@@ -35,12 +35,12 @@ router.post("/application", async (req, res) => {
     if (return_value == 1)
         return;
     if (req.body.asset.length != 24) {
-        res.send("Invalid asset id").status(400)
+        res.status(400).json({message : "Invalid asset id"})
         return;
     }
     await mongoose.model('assetSchema', assetSchema).findById(mongoose.Types.ObjectId.createFromHexString(req.body.asset)).then((doc) => {
         if (!doc) {
-            res.send("Invalid asset id").status(400)
+            res.status(400).json({message : "Invalid asset id"})
             return_value = 1;
         }
         else
@@ -51,25 +51,25 @@ router.post("/application", async (req, res) => {
     gfs.bucketName = "application";
     const applicationModel = mongoose.model('applicationSchema', applicationSchema);
     await applicationModel.findOneAndUpdate({ user: user_id, asset: asset_id }, { $set: { email: user_id, asset: asset_id } }, { upsert: true, returnNewDocument: true })
-    res.send("The application is successfully created!").status(200);
+    res.status(200).json({message : "The application is successfully created!"});
 });
 
 // Route to get application by id
 router.get("/application/:id", async (req, res) => {
     // Check if token is provided
     if (!req.body.token) {
-        res.send("Token is needed, try to login again").status(400);
+        res.status(400).json({message : "Token is needed, try to login again"});
         return;
     }
     // Check if token is valid
     const auth = check_token(req.body.token)
     if (auth === false) {
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message : "Your token is invalid"});
         return;
     }
     // Check if id in request parameters is valid
     if (req.params.id.length != 24) {
-        res.send("invalid id").status(400);
+        res.status(400).json({message : "invalid id"});
         return;
     }
     gfs.bucketName = "user";
@@ -79,9 +79,9 @@ router.get("/application/:id", async (req, res) => {
             const applicationModel = mongoose.model('applicationSchema', applicationSchema);
             // Find application by id
             const application = await applicationModel.findById(req.params.id);
-            res.send(application).status(200)
+            res.status(200).send(application);
         } else {
-            res.send("You are not authorized").status(400)
+            res.status(400).json({message : "You are not authorized"})
         }
     })
 });
@@ -90,13 +90,13 @@ router.get("/application/:id", async (req, res) => {
 router.get("/application", async (req, res) => {
     // Check if token is provided
     if (!req.body.token) {
-        res.send("Token is needed, try to login again").status(400);
+        res.status(400).json({message : "Token is needed, try to login again"});
         return;
     }
     // Check if token is valid
     const auth = check_token(req.body.token)
     if (auth === false) {
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message : "Your token is invalid"});
         return;
     }
     gfs.bucketName = "user";
@@ -106,9 +106,9 @@ router.get("/application", async (req, res) => {
             const applicationModel = mongoose.model('applicationSchema', applicationSchema);
             // Find applications
             const application = await applicationModel.find();
-            res.send(application).status(200)
+            res.status(200).send(application)
         } else {
-            res.send("You are not authorized").status(400)
+            res.status(400).json({message : "You are not authorized"})
         }
     })
 });
