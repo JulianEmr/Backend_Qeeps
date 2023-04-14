@@ -7,10 +7,10 @@ const router = express();
 
 router.post("/agency", upload.single("logo"), async (req, res) => {
     if (!req.body.token)
-        res.send("Token is needed, try to login again").status(400);
+        res.status(400).json({message: "Token is needed, try to login again"});
     const auth = check_token(req.body.token)
     if (auth === false)
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message: "Your token is invalid"});
     gfs.bucketName = "user";
     const userModel = mongoose.model('userSchema', userSchema);
     await userModel.findById(auth).then((doc) => {
@@ -22,10 +22,10 @@ router.post("/agency", upload.single("logo"), async (req, res) => {
                 logo: req.file.id,
             });
             newAgency.save();
-            res.send("The agency is successfully created!").status(200);
+            res.status(200).json({message: "The agency is successfully created!"});
         }
         else {
-            res.send("You don't have permission to access this")
+            res.status(400).json({message: "You don't have permission to access this"});
         }
     })
 });
@@ -34,18 +34,18 @@ router.post("/agency", upload.single("logo"), async (req, res) => {
 router.get("/agency/:id", async (req, res) => {
     // Check if token is provided
     if (!req.body.token) {
-        res.send("Token is needed, try to login again").status(400);
+        res.status(400).json({message: "Token is needed, try to login again"});
         return;
     }
     // Check if token is valid
     const auth = check_token(req.body.token)
     if (auth === false) {
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message: "Your token is invalid"});
         return;
     }
     // Check if id in request parameters is valid
     if (req.params.id.length != 24) {
-        res.send("invalid id").status(400);
+        res.status(400).json({message: "invalid id"});
         return;
     }
     gfs.bucketName = "user";
@@ -55,9 +55,9 @@ router.get("/agency/:id", async (req, res) => {
             const agencyModel = mongoose.model('agencySchema', agencySchema);
             // Find agency by id
             const agency = await agencyModel.findById(req.params.id);
-            res.send(agency).status(200)
+            res.status(200).json({message: agency})
         } else {
-            res.send("You are not authorized").status(400)
+            res.status(400).json({message: "You are not authorized"})
         }
     })
 });
@@ -66,13 +66,14 @@ router.get("/agency/:id", async (req, res) => {
 router.get("/agency", async (req, res) => {
     // Check if token is provided
     if (!req.body.token) {
-        res.send("Token is needed, try to login again").status(400);
+        console.log("bouffon")
+        res.status(400).json({message: "Token is needed, try to login again"});
         return;
     }
     // Check if token is valid
     const auth = check_token(req.body.token)
     if (auth === false) {
-        res.send("Your token is invalid").status(400);
+        res.status(400).json({message: "Your token is invalid"});
         return;
     }
     gfs.bucketName = "user";
@@ -82,9 +83,9 @@ router.get("/agency", async (req, res) => {
             const agencyModel = mongoose.model('agencySchema', agencySchema);
             // Find agencies
             const agency = await agencyModel.find();
-            res.send(agency).status(200)
+            res.status(200).json({message: agency})
         } else {
-            res.send("You are not authorized").status(400)
+            res.status(400).json({message: "You are not authorized"});
         }
     })
 });
