@@ -57,4 +57,15 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-module.exports = {userSchema, assetSchema, agencySchema}
+const applicationSchema = new mongoose.Schema({
+    asset: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+    user: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    }
+});
+
+module.exports = {userSchema, assetSchema, agencySchema, applicationSchema}
