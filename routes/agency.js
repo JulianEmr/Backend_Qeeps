@@ -1,5 +1,5 @@
 const gfs = require("../db/connection.js");
-const {userSchema, agencySchema, assetSchema} = require("../schema.js");
+const {userSchema, assetSchema, agencySchema} = require("../schema.js");
 const {check_token, upload} = require("../routes.js");
 const mongoose = require("mongoose");
 const express = require("express");
